@@ -3,7 +3,6 @@
 int ledd7 = D7; //LED to know if the program is running 
 
 void callback(char* topic, byte* payload, unsigned int length);
-
 /**
  * if want to use IP address,
  * byte server[] = { XXX,XXX,XXX,XXX };
@@ -28,10 +27,24 @@ void callback(char* topic, byte* payload, unsigned int length) {
     else if (message.equals("STOP"))    
         RGB.color(255, 255, 255);
     else if (message.equals("SWITCH_D7"))
-        blink_d7(5); 
+        blink_d7(5);
+    else if (message.equals("TALK"))
+        client.publish("COLOR","Welcome to Talk Mode of PHOTON");
+    else if ((message.equals("HELLO")) || (message.equals("HI")) || (message.equals("YO")))
+    {
+        client.publish("COLOR", "Hey What's up ?"); 
+        blink_d7(1); 
+    }
+    else if((message.equals("BYE")) || (message.equals("ADIOS")))
+    {
+        client.publish("COLOR", "Good Bye and Have a nice day");
+        blink_d7(3); 
+        RGB.color(0,0,0);
+    }
     else
-        RGB.color(0,0,0); 
-        
+    {
+        RGB.color(100,100,100);
+    }    
     delay(1000);
 }
 
@@ -84,4 +97,3 @@ void loop()
     if (client.isConnected())
         client.loop();
 }
-
