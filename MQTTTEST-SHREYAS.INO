@@ -10,7 +10,10 @@ void callback(char* topic, byte* payload, unsigned int length);
  * want to use domain name,
  * MQTT client("www.sample.com", 1883, callback);
  **/
-MQTT client("m12.cloudmqtt.com", 13434, callback);
+ byte server[] = {192,168,201,28};
+ MQTT client(server,1883,callback);
+//MQTT client("m12.cloudmqtt.com", 13434, callback);
+
 // recieve message
 void callback(char* topic, byte* payload, unsigned int length) {
     char p[length + 1];
@@ -75,7 +78,8 @@ void setup()
     setup_led(); 
     
     // connect to the server
-    client.connect("sparkclient","qqwynymm","6mpZdQyzo1r6"); //id, username, password
+    //client.connect("sparkclient","qqwynymm","6mpZdQyzo1r6"); //id, username, password
+    client.connect("sparkclient");
 
     // publish/subscribe
     if (client.isConnected()) 
@@ -97,3 +101,5 @@ void loop()
     if (client.isConnected())
         client.loop();
 }
+
+
