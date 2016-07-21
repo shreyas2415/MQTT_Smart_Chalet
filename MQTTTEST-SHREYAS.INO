@@ -1,4 +1,5 @@
 #include "MQTT/MQTT.h"
+#include "application.h"
 
 int ledd7 = D7; //LED to know if the program is running 
 
@@ -14,8 +15,8 @@ void callback(char* topic, byte* payload, unsigned int length);
  MQTT client(server,1883,callback);
 //MQTT client("m12.cloudmqtt.com", 13434, callback);
 
-// recieve message
-void callback(char* topic, byte* payload, unsigned int length) {
+void handle_particle(byte* payload, unsigned int length)
+{
     char p[length + 1];
     memcpy(p, payload, length);
     p[length] = NULL;
@@ -51,6 +52,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
     delay(1000);
 }
 
+int handle_wrapper(String command)
+{
+    char* buffer;
+    int length = command.length(); 
+    command.toCharArray(buffer,length);
+    handle_particle((byte*)buffer,length);
+    return 0; 
+}
+
+// recieve message
+void callback(char* topic, byte* payload, unsigned int length) 
+{
+    handle_particle(payload,length);
+}
+
 void blink(void)
 {
     digitalWrite(ledd7, HIGH); 
@@ -77,6 +93,7 @@ void setup()
     
     setup_led(); 
     
+    Particle.function("led", handle_wrapper);
     // connect to the server
     //client.connect("sparkclient","qqwynymm","6mpZdQyzo1r6"); //id, username, password
     client.connect("sparkclient");
