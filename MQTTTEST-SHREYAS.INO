@@ -3,6 +3,8 @@
 
 int ledd7 = D7; //LED to know if the program is running 
 
+//This is the callback which will be called whenever a message is received 
+//over MQTT
 void callback(char* topic, byte* payload, unsigned int length);
 /**
  * if want to use IP address,
@@ -11,10 +13,15 @@ void callback(char* topic, byte* payload, unsigned int length);
  * want to use domain name,
  * MQTT client("www.sample.com", 1883, callback);
  **/
+ //We use the byte server, if we explicitely know the server address
+ //In case its a cloud based server(broker) you just have to specify 
+ //the cloud server name 
  byte server[] = {192,168,201,28};
  MQTT client(server,1883,callback);
 //MQTT client("m12.cloudmqtt.com", 13434, callback);
 
+//This is an interface which controls the LEDs based 
+//on commands it receives from the particle server
 void handle_particle(byte* payload, unsigned int length)
 {
     char p[length + 1];
